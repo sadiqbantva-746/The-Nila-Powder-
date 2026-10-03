@@ -357,6 +357,8 @@ textarea{min-height:92px;resize:vertical}
 </div>
 
 <script>
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwEou_oZj_SfDLobrwmux6VPX42C57ZMiCI3m35dXPsIl4QWtsuQ1mLHj9NV9WOH9RzmQ/exec';
+
 const PACK_PRICES = {3: 1300, 5: 1600};
 const DELIVERY = 250;
 const qty = document.getElementById('qty');
@@ -425,6 +427,28 @@ document.getElementById('orderForm').addEventListener('submit', function(e){
   const customerName = document.getElementById('name').value.trim();
   const pack=Number(qty.value);
   const packPrice=PACK_PRICES[pack];
+  const orderData = {
+    name: customerName,
+    phone: document.getElementById('phone').value.trim(),
+    city: document.getElementById('city').value.trim(),
+    quantity: 'Pack of ' + pack,
+    address: document.getElementById('address').value.trim(),
+    nearest: document.getElementById('near').value.trim(),
+    product: 'Nila Zarka Moroccan Beauty Powder',
+    productPrice: packPrice,
+    delivery: DELIVERY,
+    total: packPrice + DELIVERY,
+    source: 'Nila Zarka Website'
+  };
+
+  if (GOOGLE_APPS_SCRIPT_URL && !GOOGLE_APPS_SCRIPT_URL.includes('PASTE_YOUR')) {
+    fetch(GOOGLE_APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify(orderData)
+    }).catch(()=>{});
+  }
   document.getElementById('thankPack').textContent = 'Nila Zarka — Pack of ' + pack;
   document.getElementById('thankQty').textContent = 'Pack of ' + pack;
   document.getElementById('thankProductPrice').textContent = money(packPrice);
