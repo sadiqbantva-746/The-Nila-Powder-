@@ -146,27 +146,6 @@ textarea{min-height:92px;resize:vertical}
  .section{padding:52px 0}
 }
 </style>
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2272764813565494');
-fbq('track', 'PageView');
-// Meta Pixel Purchase is fired after the customer reaches the Thank You page.
-window.metaPurchaseSent = false;
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=2272764813565494&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
 </head>
 <body>
 
@@ -378,7 +357,7 @@ src="https://www.facebook.com/tr?id=2272764813565494&ev=PageView&noscript=1"
 </div>
 
 <script>
-const GOOGLE_APPS_SCRIPT_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwEou_oZj_SfDLobrwmux6VPX42C57ZMiCI3m35dXPsIl4QWtsuQ1mLHj9NV9WOH9RzmQ/exec';
 
 const PACK_PRICES = {3: 1300, 5: 1600};
 const DELIVERY = 250;
@@ -500,28 +479,6 @@ document.getElementById('orderForm').addEventListener('submit', function(e){
   setTimeout(()=>{
     countdown.classList.remove('show');
     document.getElementById('thankYouPage').classList.add('show');
-
-    // Meta Pixel: count Purchase only after the Thank You page is shown.
-    // Fire Purchase once, only after Thank You is visible.
-    try{
-      if(typeof fbq === 'function' && !window.metaPurchaseSent){
-        window.metaPurchaseSent = true;
-        const purchaseValue = Number(packPrice) + Number(DELIVERY);
-        const eventId = 'nila-' + Date.now() + '-' + Math.random().toString(36).slice(2,10);
-        fbq('track', 'Purchase', {
-          value: purchaseValue,
-          currency: 'PKR',
-          content_name: 'Nila Zarka Moroccan Beauty Powder',
-          content_ids: ['nila-zarka'],
-          content_type: 'product',
-          num_items: pack
-        }, { eventID: eventId });
-        console.log('Meta Purchase fired:', {eventId, value: purchaseValue, pack});
-      }
-    }catch(err){
-      console.warn('Meta Purchase error:', err);
-    }
-
     speakThankYou(customerName);
   },3000);
 });
