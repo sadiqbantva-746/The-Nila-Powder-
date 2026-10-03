@@ -268,7 +268,8 @@ textarea{min-height:92px;resize:vertical}
           </div>
           <div class="field">
             <label>QUANTITY *</label>
-            <select id="qty">
+            <select id="qty" required>
+              <option value="" selected disabled>— Select Pack —</option>
               <option value="3">Pack of 3 — Rs. 1,300 (≈ Rs. 433 each)</option>
               <option value="5">Pack of 5 — Rs. 1,600 (Rs. 320 each)</option>
             </select>
@@ -286,8 +287,8 @@ textarea{min-height:92px;resize:vertical}
         </div>
 
         <div class="summary">
-          <div class="sumline"><span>Selected Pack</span><b id="selectedPack">Pack of 3</b></div>
-          <div class="sumline"><span>Product</span><b id="productTotal">Rs. 1,300</b></div>
+          <div class="sumline"><span>Selected Pack</span><b id="selectedPack">Please select a pack</b></div>
+          <div class="sumline"><span>Product</span><b id="productTotal">—</b></div>
           <div class="sumline"><span>Delivery Charges</span><b>Rs. 250</b></div>
           <div class="sumline total"><span>Total Amount</span><span id="grandTotal">Rs. 1,550</span></div>
         </div>
@@ -364,6 +365,12 @@ const grandTotal = document.getElementById('grandTotal');
 function money(n) { return 'Rs. ' + n.toLocaleString('en-PK'); }
 
 function updateTotal() {
+  if (!qty.value) {
+    productTotal.textContent = '—';
+    grandTotal.textContent = '—';
+    document.getElementById('selectedPack').textContent = 'Please select a pack';
+    return;
+  }
   const pack = Number(qty.value);
   const price = PACK_PRICES[pack];
   productTotal.textContent = money(price);
