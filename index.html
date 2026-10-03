@@ -159,6 +159,8 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '2272764813565494');
 fbq('track', 'PageView');
+// Meta Pixel Purchase is fired after the customer reaches the Thank You page.
+window.metaPurchaseSent = false;
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=2272764813565494&ev=PageView&noscript=1"
@@ -500,18 +502,25 @@ document.getElementById('orderForm').addEventListener('submit', function(e){
     document.getElementById('thankYouPage').classList.add('show');
 
     // Meta Pixel: count Purchase only after the Thank You page is shown.
+    // Fire Purchase once, only after Thank You is visible.
     try{
-      if(typeof fbq === 'function'){
+      if(typeof fbq === 'function' && !window.metaPurchaseSent){
+        window.metaPurchaseSent = true;
+        const purchaseValue = Number(packPrice) + Number(DELIVERY);
+        const eventId = 'nila-' + Date.now() + '-' + Math.random().toString(36).slice(2,10);
         fbq('track', 'Purchase', {
-          value: packPrice + DELIVERY,
+          value: purchaseValue,
           currency: 'PKR',
           content_name: 'Nila Zarka Moroccan Beauty Powder',
           content_ids: ['nila-zarka'],
           content_type: 'product',
           num_items: pack
-        });
+        }, { eventID: eventId });
+        console.log('Meta Purchase fired:', {eventId, value: purchaseValue, pack});
       }
-    }catch(err){}
+    }catch(err){
+      console.warn('Meta Purchase error:', err);
+    }
 
     speakThankYou(customerName);
   },3000);
